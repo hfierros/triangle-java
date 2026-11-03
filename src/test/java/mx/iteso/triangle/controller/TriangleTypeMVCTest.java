@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /* This test class tests the controller class using a mock MVC controller */
@@ -42,6 +43,23 @@ public class TriangleTypeMVCTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.type")
                         .value("EQUILATERAL"));
 
+    }
+
+    @Test
+    public void testInvalidHandlerException() throws Exception {
+        String triangleJson = "{\"sideA\":0,\"sideB\":1,\"sideC\":1}";
+
+        mvc.perform(MockMvcRequestBuilders.post("/type")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(triangleJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors.length()")
+                        .value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0]")
+                        .value("sideA must be higher than 0"));
+
+        verifyNoInteractions(triangleType);
     }
 
 }
