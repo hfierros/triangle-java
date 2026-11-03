@@ -21,4 +21,10 @@ class TriangleTypeTest {
         assertEquals(TriangleTypes.SCALENE, type);
     }
 
+    @Test
+    public void testInvalidTriangle() {
+        TriangleDto scalene = new TriangleDto(1L,3L,4L);
+        TriangleTypes type = triangleType.getTriangleType(scalene);
+        assertEquals(TriangleTypes.SCALENE, type);
+    }
 }
